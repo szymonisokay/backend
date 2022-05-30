@@ -23,6 +23,7 @@ const ProductSchema = new mongoose.Schema(
     product_type: {
       type: String,
       enum: ['Physical', 'Virtual', 'Downloadable'],
+      default: 'Physical',
     },
     product_category: {
       type: String,

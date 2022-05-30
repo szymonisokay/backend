@@ -7,6 +7,7 @@ const { errorHandler } = require('./middlewares/errorMiddleware')
 
 const authRouter = require('./routes/authRoute')
 const usersRouter = require('./routes/usersRoute')
+const productsRouter = require('./routes/productsRoute')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: false }))
 
 app.use('/api/auth/', authRouter)
 app.use('/api/users/', usersRouter)
+app.use('/api/products/', productsRouter)
 
 app.use(errorHandler)
 
