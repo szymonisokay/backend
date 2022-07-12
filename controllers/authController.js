@@ -41,7 +41,7 @@ const register = asyncHandler(async (req, res) => {
 })
 
 const login = asyncHandler(async (req, res) => {
-  const { email, password } = req.body
+  const { email, password, remember } = req.body
 
   if (!email || !password) {
     res.status(400)
@@ -62,9 +62,11 @@ const login = asyncHandler(async (req, res) => {
     throw new Error('Password do not match')
   }
 
-  const token = jwt.sign({ id: user._id }, process.env.SECRET, {
-    expiresIn: '1d',
-  })
+  const tokenOptions = !!remember ? {} : { expiresIn: '1d' }
+
+  console.log(tokenOptions)
+
+  const token = jwt.sign({ id: user._id }, process.env.SECRET, tokenOptions)
 
   const { password: localPassword, ...data } = user._doc
 
