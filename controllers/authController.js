@@ -64,8 +64,6 @@ const login = asyncHandler(async (req, res) => {
 
   const tokenOptions = !!remember ? {} : { expiresIn: '1d' }
 
-  console.log(tokenOptions)
-
   const token = jwt.sign({ id: user._id }, process.env.SECRET, tokenOptions)
 
   const { password: localPassword, ...data } = user._doc
