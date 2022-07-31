@@ -35,12 +35,30 @@ const createOffer = asyncHandler(async (req, res) => {
 })
 
 const getOffers = asyncHandler(async (req, res) => {
-  const offers = await Offer.find({})
+  const { sort, limit, filters } = req.query
 
-  if (!offers) {
-    res.status(400)
-    throw new Error('Offers not found')
+  console.log(filters)
+  let sortOption = {}
+
+  switch (sort) {
+    case 'price_asc':
+      sortOption = { price: 1 }
+      break
+    case 'price_desc':
+      sortOption = { price: -1 }
+      break
+    case 'newest':
+      sortOption = { createdAt: -1 }
+      break
   }
+
+  let filterOption = {}
+
+  // switch(filters) {
+  //   case
+  // }
+
+  const offers = await Offer.find(filterOption).sort(sortOption).limit(limit)
 
   res.status(200).json({ results: offers, total: offers.length })
 })
