@@ -1,5 +1,14 @@
 const mongoose = require('mongoose')
 
+const FacilitySchema = new mongoose.Schema({
+  name: {
+    type: String,
+  },
+  amount: {
+    type: Number,
+  },
+})
+
 const OfferSchema = new mongoose.Schema(
   {
     title: {
@@ -32,7 +41,7 @@ const OfferSchema = new mongoose.Schema(
     },
     price_month: {
       type: Number,
-      default: '',
+      default: 0,
     },
     property_type: {
       type: String,
@@ -50,17 +59,23 @@ const OfferSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
-    is_parking: {
-      type: Boolean,
-      default: false,
+    facilities: {
+      type: [FacilitySchema],
+      default: [],
     },
-    parking_type: {
-      type: String,
-      default: '',
-    },
-    parking_num: {
-      type: Number,
-      default: 0,
+    parking: {
+      is_parking: {
+        type: Boolean,
+        default: false,
+      },
+      parking_type: {
+        type: String,
+        default: '',
+      },
+      parking_num: {
+        type: Number,
+        default: 0,
+      },
     },
     images: {
       featured: {
@@ -92,6 +107,14 @@ const OfferSchema = new mongoose.Schema(
       zip_code: {
         type: String,
         required: true,
+      },
+      coords: {
+        lat: {
+          type: Number,
+        },
+        lng: {
+          type: Number,
+        },
       },
     },
     user: {
