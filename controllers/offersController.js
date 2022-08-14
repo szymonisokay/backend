@@ -29,7 +29,12 @@ const createOffer = asyncHandler(async (req, res) => {
     throw new Error('Please provide all data')
   }
 
-  const offer = await Offer.create(req.body)
+  const newOffer = {
+    ...req.body,
+    user: req.user._id,
+  }
+
+  const offer = await Offer.create(newOffer)
 
   res.status(201).json(offer)
 })
@@ -67,7 +72,10 @@ const getOffers = asyncHandler(async (req, res) => {
 const getOffer = asyncHandler(async (req, res) => {
   const { id: offerId } = req.params
 
-  const offer = await Offer.findById(offerId)
+  const offer = await Offer.findById(offerId).populate({
+    path: 'user',
+    select: '-password -is_admin -__v',
+  })
 
   if (!offer) {
     res.status(400)
