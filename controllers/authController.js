@@ -1,7 +1,9 @@
-const User = require('../models/userModel')
 const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+
+const User = require('../models/userModel')
+const Wallet = require('../models/walletModel')
 
 const register = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body
@@ -25,6 +27,8 @@ const register = asyncHandler(async (req, res) => {
   }
 
   const user = await User.create(userData)
+
+  await Wallet.create({ user: user._id })
 
   const token = jwt.sign({ id: user._id }, process.env.SECRET, {
     expiresIn: '1d',
