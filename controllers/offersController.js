@@ -35,9 +35,8 @@ const createOffer = asyncHandler(async (req, res) => {
 })
 
 const getOffers = asyncHandler(async (req, res) => {
-  const { sort, limit, filters } = req.query
+  const { sort, limit, filters, page } = req.query
 
-  console.log(filters)
   let sortOption = {}
 
   switch (sort) {
@@ -54,13 +53,15 @@ const getOffers = asyncHandler(async (req, res) => {
 
   let filterOption = {}
 
-  // switch(filters) {
-  //   case
-  // }
+  const skip = (page - 1) * limit
 
-  const offers = await Offer.find(filterOption).sort(sortOption).limit(limit)
+  const allOffersCount = await Offer.estimatedDocumentCount()
+  const offers = await Offer.find(filterOption)
+    .sort(sortOption)
+    .limit(limit)
+    .skip(skip)
 
-  res.status(200).json({ results: offers, total: offers.length })
+  res.status(200).json({ results: offers, total: allOffersCount })
 })
 
 const getOffer = asyncHandler(async (req, res) => {
@@ -73,7 +74,7 @@ const getOffer = asyncHandler(async (req, res) => {
     throw new Error('Offer not found')
   }
 
-  res.status(200).json({ result: offer, total: 1 })
+  res.status(200).json({ results: offer, total: 1 })
 })
 
 module.exports = {
