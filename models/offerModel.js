@@ -121,6 +121,14 @@ const OfferSchema = new mongoose.Schema(
         },
       },
     },
+    surroundings: {
+      type: String,
+      required: true,
+    },
+    nearby: {
+      type: String,
+      required: true,
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
