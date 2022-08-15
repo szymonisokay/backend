@@ -35,6 +35,10 @@ const OfferSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    is_for_purchase: {
+      type: Boolean,
+      default: true,
+    },
     is_for_rent: {
       type: Boolean,
       default: false,

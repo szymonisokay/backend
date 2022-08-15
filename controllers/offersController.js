@@ -85,8 +85,20 @@ const getOffer = asyncHandler(async (req, res) => {
   res.status(200).json({ results: offer, total: 1 })
 })
 
+const deleteAll = asyncHandler(async (req, res) => {
+  if (!req.user.is_admin) {
+    res.status(401)
+    throw new Error('Access denied')
+  }
+
+  await Offer.deleteMany()
+
+  res.status(200).json('Deleted')
+})
+
 module.exports = {
   createOffer,
   getOffers,
   getOffer,
+  deleteAll,
 }
