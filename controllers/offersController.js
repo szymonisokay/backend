@@ -4,26 +4,43 @@ const Offer = require('../models/offerModel')
 const createOffer = asyncHandler(async (req, res) => {
   const {
     title,
-    body_html,
+    description,
     area,
-    usable_area,
+    land_area,
     price,
-    price_m2,
-    rooms_num,
+    property_type,
+    construction_year,
     images: { featured },
     available,
+    location: {
+      country,
+      city,
+      street,
+      zip_code,
+      coords: { lat, lng },
+    },
+    surroundings,
+    nearby,
   } = req.body
 
   if (
     !title ||
-    !body_html ||
+    !description ||
     !area ||
-    !usable_area ||
+    !land_area ||
     !price ||
-    !price_m2 ||
-    !rooms_num ||
+    !property_type ||
+    !construction_year ||
     !featured ||
-    !available
+    !available ||
+    !country ||
+    !city ||
+    !street ||
+    !zip_code ||
+    !lat ||
+    !lng ||
+    !surroundings ||
+    !nearby
   ) {
     res.status(400)
     throw new Error('Please provide all data')

@@ -15,7 +15,7 @@ const OfferSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    body_html: {
+    description: {
       type: String,
       required: true,
     },
@@ -23,21 +23,13 @@ const OfferSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    usable_area: {
+    land_area: {
       type: Number,
       required: true,
     },
     price: {
       type: Number,
       required: true,
-    },
-    price_m2: {
-      type: Number,
-      required: true,
-    },
-    is_for_purchase: {
-      type: Boolean,
-      default: true,
     },
     is_for_rent: {
       type: Boolean,
@@ -49,19 +41,11 @@ const OfferSchema = new mongoose.Schema(
     },
     property_type: {
       type: String,
-      default: '',
+      required: true,
     },
     construction_year: {
       type: String,
-      default: '',
-    },
-    rooms_num: {
-      type: Number,
       required: true,
-    },
-    land_area: {
-      type: String,
-      default: '',
     },
     facilities: {
       type: [FacilitySchema],
@@ -115,9 +99,11 @@ const OfferSchema = new mongoose.Schema(
       coords: {
         lat: {
           type: Number,
+          required: true,
         },
         lng: {
           type: Number,
+          required: true,
         },
       },
     },
