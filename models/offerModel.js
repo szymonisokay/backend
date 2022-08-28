@@ -1,14 +1,5 @@
 const mongoose = require('mongoose')
 
-const FacilitySchema = new mongoose.Schema({
-  name: {
-    type: String,
-  },
-  amount: {
-    type: Number,
-  },
-})
-
 const OfferSchema = new mongoose.Schema(
   {
     title: {
@@ -48,14 +39,14 @@ const OfferSchema = new mongoose.Schema(
       required: true,
     },
     facilities: {
-      type: [FacilitySchema],
+      type: [String],
       default: [],
     },
+    is_parking: {
+      type: Boolean,
+      required: true,
+    },
     parking: {
-      is_parking: {
-        type: Boolean,
-        default: false,
-      },
       parking_type: {
         type: String,
         default: '',

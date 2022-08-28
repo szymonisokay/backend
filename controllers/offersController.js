@@ -10,6 +10,7 @@ const createOffer = asyncHandler(async (req, res) => {
     price,
     property_type,
     construction_year,
+    is_parking,
     images: { featured },
     available,
     location: {
@@ -31,6 +32,7 @@ const createOffer = asyncHandler(async (req, res) => {
     !price ||
     !property_type ||
     !construction_year ||
+    !is_parking ||
     !featured ||
     !available ||
     !country ||
