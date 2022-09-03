@@ -4,23 +4,28 @@ const OfferSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true,
+      default: '',
+      // required: true,
     },
     description: {
       type: String,
-      required: true,
+      default: '',
+      // required: true,
     },
     area: {
       type: Number,
-      required: true,
+      default: 0,
+      // required: true,
     },
     land_area: {
       type: Number,
-      required: true,
+      default: 0,
+      // required: true,
     },
     price: {
       type: Number,
-      required: true,
+      default: 0,
+      // required: true,
     },
     is_for_rent: {
       type: Boolean,
@@ -32,11 +37,13 @@ const OfferSchema = new mongoose.Schema(
     },
     property_type: {
       type: String,
-      required: true,
+      default: '',
+      // required: true,
     },
     construction_year: {
       type: String,
-      required: true,
+      default: '',
+      // required: true,
     },
     facilities: {
       type: [String],
@@ -44,7 +51,8 @@ const OfferSchema = new mongoose.Schema(
     },
     is_parking: {
       type: Boolean,
-      required: true,
+      default: false,
+      // required: true,
     },
     parking: {
       parking_type: {
@@ -59,7 +67,8 @@ const OfferSchema = new mongoose.Schema(
     images: {
       featured: {
         type: String,
-        required: true,
+        default: '',
+        // required: true,
       },
       other: {
         type: [String],
@@ -68,48 +77,61 @@ const OfferSchema = new mongoose.Schema(
     },
     available: {
       type: String,
-      required: true,
+      default: '',
+      // required: true,
     },
     location: {
       country: {
         type: String,
-        required: true,
+        default: '',
+        // required: true,
       },
       city: {
         type: String,
-        required: true,
+        default: '',
+        // required: true,
       },
       street: {
         type: String,
-        required: true,
+        default: '',
+        // required: true,
       },
       zip_code: {
         type: String,
-        required: true,
+        default: '',
+        // required: true,
       },
       coords: {
         lat: {
           type: Number,
-          required: true,
+          default: 0,
+          // required: true,
         },
         lng: {
           type: Number,
-          required: true,
+          default: 0,
+          // required: true,
         },
       },
     },
     surroundings: {
       type: String,
-      required: true,
+      default: '',
+      // required: true,
     },
     nearby: {
       type: String,
-      required: true,
+      default: '',
+      // required: true,
+    },
+    is_published: {
+      type: Boolean,
+      default: false,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      // required: true,
     },
   },
   { timestamps: true }
