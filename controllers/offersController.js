@@ -61,34 +61,80 @@ const createOffer = asyncHandler(async (req, res) => {
 })
 
 const getOffers = asyncHandler(async (req, res) => {
-  const { sort, limit, filters, page } = req.query
+  const { type, location, minPrice, maxPrice, minArea, maxArea, sort } =
+    req.query
 
-  let sortOption = {}
+  let query = {}
+
+  if (type === 'rent') {
+    query.is_for_rent = true
+  }
+
+  if (location) {
+    query.$or = [
+      { 'location.street': { $regex: location, $options: 'i' } },
+      { 'location.city': { $regex: location, $options: 'i' } },
+      { 'location.country': { $regex: location, $options: 'i' } },
+    ]
+  }
+
+  if (minPrice !== '0' && type === 'rent') {
+    query.price_month = {
+      ...query.price_month,
+      $gte: minPrice,
+    }
+  } else if (minPrice !== '0' && type === 'purchase') {
+    query.price = {
+      ...query.price,
+      $gte: minPrice,
+    }
+  }
+
+  if (maxPrice !== '0' && type === 'rent') {
+    query.price_month = {
+      ...query.price_month,
+      $lte: maxPrice,
+    }
+  } else if (maxPrice !== '0' && type === 'purchase') {
+    query.price = {
+      ...query.price,
+      $lte: maxPrice,
+    }
+  }
+
+  if (minArea !== '0') {
+    query.area = {
+      ...query.area,
+      $gte: minArea,
+    }
+  }
+
+  if (maxArea !== '0') {
+    query.area = {
+      ...query.area,
+      $lte: maxArea,
+    }
+  }
+
+  let sortOptions = {}
 
   switch (sort) {
+    case 'newest':
+      sortOptions = { createdAt: -1 }
+      break
     case 'price_asc':
-      sortOption = { price: 1 }
+      sortOptions = { price: 1 }
       break
     case 'price_desc':
-      sortOption = { price: -1 }
-      break
-    case 'newest':
-      sortOption = { createdAt: -1 }
+      sortOptions = { price: -1 }
       break
   }
 
-  let filterOption = {}
-
-  const skip = (page - 1) * limit
-
-  const allOffersCount = await Offer.estimatedDocumentCount()
-  const offers = await Offer.find({})
+  const offers = await Offer.find(query)
     .where('is_published', true)
-    .sort({ createdAt: -1 })
-    .limit(limit)
-    .skip(skip)
+    .sort(sortOptions)
 
-  res.status(200).json({ results: offers, total: allOffersCount })
+  res.status(200).json({ results: offers, total: offers.length })
 })
 
 const getOffer = asyncHandler(async (req, res) => {
@@ -105,6 +151,14 @@ const getOffer = asyncHandler(async (req, res) => {
   }
 
   res.status(200).json({ results: offer, total: 1 })
+})
+
+const getUserOffers = asyncHandler(async (req, res) => {
+  const { id: userId } = req.params
+
+  const offers = await Offer.find({ user: userId })
+
+  res.status(200).json({ results: offers, total: offers.length })
 })
 
 const updateOffer = asyncHandler(async (req, res) => {
@@ -152,6 +206,7 @@ module.exports = {
   createOffer,
   getOffers,
   getOffer,
+  getUserOffers,
   updateOffer,
   deleteAll,
   uploadImage,

@@ -1,8 +1,9 @@
 const express = require('express')
 const {
   createOffer,
-  getOffers,
   getOffer,
+  getOffers,
+  getUserOffers,
   updateOffer,
   deleteAll,
   uploadImage,
@@ -25,6 +26,7 @@ const router = express.Router()
 router.post('/', auth, createOffer)
 router.get('/', getOffers)
 router.get('/:id', getOffer)
+router.get('/user/:id', auth, getUserOffers)
 router.put('/:id', auth, updateOffer)
 router.delete('/', auth, deleteAll)
 router.post('/upload', auth, upload.single('image'), uploadImage)
