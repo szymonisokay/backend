@@ -33,7 +33,7 @@ const updateUser = asyncHandler(async (req, res) => {
     res.status(401)
     throw new Error('Access denied')
   }
-  console.log(req.body)
+
   const user = await User.findByIdAndUpdate(userId, req.body, {
     new: true,
   }).select('-password')

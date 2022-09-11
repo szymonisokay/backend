@@ -5,6 +5,7 @@ const {
   getOffers,
   getUserOffers,
   updateOffer,
+  deleteOffer,
   deleteAll,
   uploadImage,
 } = require('../controllers/offersController')
@@ -24,10 +25,11 @@ const upload = multer({ storage })
 const router = express.Router()
 
 router.post('/', auth, createOffer)
-router.get('/', getOffers)
-router.get('/:id', getOffer)
+router.get('/', auth, getOffers)
+router.get('/:id', auth, getOffer)
 router.get('/user/:id', auth, getUserOffers)
 router.put('/:id', auth, updateOffer)
+router.delete('/:id', auth, deleteOffer)
 router.delete('/', auth, deleteAll)
 router.post('/upload', auth, upload.single('image'), uploadImage)
 

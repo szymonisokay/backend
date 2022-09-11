@@ -139,6 +139,12 @@ const getOffers = asyncHandler(async (req, res) => {
 
 const getOffer = asyncHandler(async (req, res) => {
   const { id: offerId } = req.params
+  const isOffer = await Offer.findOne({ _id: offerId, user: req.user._id })
+
+  if (!isOffer) {
+    res.status(401)
+    throw new Error('Access denied')
+  }
 
   const offer = await Offer.findById(offerId).populate({
     path: 'user',
@@ -164,6 +170,13 @@ const getUserOffers = asyncHandler(async (req, res) => {
 const updateOffer = asyncHandler(async (req, res) => {
   const { id } = req.params
 
+  const offer = await Offer.findOne({ _id: id, user: req.user._id })
+
+  if (!offer) {
+    res.status(401)
+    throw new Error('Access denied')
+  }
+
   const body = {
     ...req.body,
     is_published: true,
@@ -176,6 +189,27 @@ const updateOffer = asyncHandler(async (req, res) => {
   res
     .status(201)
     .json({ msg: 'Offer updated successfully', offer: updatedOffer })
+})
+
+const deleteOffer = asyncHandler(async (req, res) => {
+  const { id } = req.params
+  const isOffer = await Offer.findOne({ _id: id, user: req.user._id })
+
+  if (!isOffer) {
+    res.status(401)
+    throw new Error('Access denied')
+  }
+
+  await Offer.findByIdAndDelete(id)
+
+  const offers = await Offer.find({ user: req.user._id })
+
+  res
+    .status(200)
+    .json({
+      msg: 'Offer deleted',
+      offers: { results: offers, total: offers.length },
+    })
 })
 
 const deleteAll = asyncHandler(async (req, res) => {
@@ -208,6 +242,7 @@ module.exports = {
   getOffer,
   getUserOffers,
   updateOffer,
+  deleteOffer,
   deleteAll,
   uploadImage,
 }
