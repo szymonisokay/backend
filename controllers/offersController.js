@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const Offer = require('../models/offerModel')
+const { environment } = require('../environment/environment')
 
 const createOffer = asyncHandler(async (req, res) => {
   // const {
@@ -139,12 +140,6 @@ const getOffers = asyncHandler(async (req, res) => {
 
 const getOffer = asyncHandler(async (req, res) => {
   const { id: offerId } = req.params
-  const isOffer = await Offer.findOne({ _id: offerId, user: req.user._id })
-
-  if (!isOffer) {
-    res.status(401)
-    throw new Error('Access denied')
-  }
 
   const offer = await Offer.findById(offerId).populate({
     path: 'user',
@@ -204,12 +199,10 @@ const deleteOffer = asyncHandler(async (req, res) => {
 
   const offers = await Offer.find({ user: req.user._id })
 
-  res
-    .status(200)
-    .json({
-      msg: 'Offer deleted',
-      offers: { results: offers, total: offers.length },
-    })
+  res.status(200).json({
+    msg: 'Offer deleted',
+    offers: { results: offers, total: offers.length },
+  })
 })
 
 const deleteAll = asyncHandler(async (req, res) => {
@@ -226,7 +219,8 @@ const deleteAll = asyncHandler(async (req, res) => {
 const uploadImage = asyncHandler(async (req, res) => {
   const { is_featured } = JSON.parse(req.body.imageData)
 
-  const parsedPath = req.file.path.split('\\').join('/')
+  const parsedPath =
+    environment.baseUrl + '/' + req.file.path.split('\\').join('/')
 
   const file = {
     ...req.file,

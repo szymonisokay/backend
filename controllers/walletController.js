@@ -6,7 +6,10 @@ const Wallet = require('../models/walletModel')
 const getWalletInfo = asyncHandler(async (req, res) => {
   const { _id: userId } = req.user
 
-  const currentWallet = await Wallet.findOne({ user: userId })
+  const currentWallet = await Wallet.findOne({ user: userId }).populate({
+    path: 'transactions',
+    populate: { path: 'offer', model: 'Offer' },
+  })
 
   if (!currentWallet) {
     res.status(401)

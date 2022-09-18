@@ -11,6 +11,7 @@ const productsRouter = require('./routes/productsRoute')
 const offersRouter = require('./routes/offersRoute')
 const walletRouter = require('./routes/walletRoute')
 const bookmarksRouter = require('./routes/bookmarksRoute')
+const transactionsRouter = require('./routes/transactionsRoute')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -26,6 +27,7 @@ app.use('/api/products/', productsRouter)
 app.use('/api/offers/', offersRouter)
 app.use('/api/wallet/', walletRouter)
 app.use('/api/bookmarks/', bookmarksRouter)
+app.use('/api/transactions/', transactionsRouter)
 
 app.use(errorHandler)
 
