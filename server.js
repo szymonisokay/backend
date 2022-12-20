@@ -12,6 +12,7 @@ const offersRouter = require('./routes/offersRoute')
 const walletRouter = require('./routes/walletRoute')
 const bookmarksRouter = require('./routes/bookmarksRoute')
 const transactionsRouter = require('./routes/transactionsRoute')
+const gamePointsRouter = require('./routes/gamePointsRoute')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -28,10 +29,11 @@ app.use('/api/offers/', offersRouter)
 app.use('/api/wallet/', walletRouter)
 app.use('/api/bookmarks/', bookmarksRouter)
 app.use('/api/transactions/', transactionsRouter)
+app.use('/api/gamePoints/', gamePointsRouter)
 
 app.use(errorHandler)
 
 app.listen(PORT, () => {
-  connect()
-  console.log(`Server is listening on port ${PORT}`)
+	connect()
+	console.log(`Server is listening on port ${PORT}`)
 })
