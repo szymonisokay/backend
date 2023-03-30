@@ -3,84 +3,92 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const User = require('../models/userModel')
+const Role = require('../models/rolesModel')
 const Wallet = require('../models/walletModel')
 
 const register = asyncHandler(async (req, res) => {
-  const { username, email, password } = req.body
+	const { username, email, password } = req.body
 
-  if (!username || !email || !password) {
-    res.status(400)
-    throw new Error('Please provide all data')
-  }
+	if (!username || !email || !password) {
+		res.status(400)
+		throw new Error('Please provide all data')
+	}
 
-  const userExists = await User.findOne({ email })
+	const userExists = await User.findOne({ email })
 
-  if (userExists) {
-    res.status(400)
-    throw new Error('User already exists')
-  }
+	if (userExists) {
+		res.status(400)
+		throw new Error('User already exists')
+	}
 
-  const salt = await bcrypt.genSalt(10)
-  const userData = {
-    ...req.body,
-    password: await bcrypt.hash(password, salt),
-  }
+	const salt = await bcrypt.genSalt(10)
+	const userRole = await Role.findOne({ role_name: 'User' })
 
-  const user = await User.create(userData)
+	const userData = {
+		...req.body,
+		user_role_id: userRole._id,
+		password: await bcrypt.hash(password, salt),
+	}
 
-  await Wallet.create({ user: user._id })
+	const user = await User.create(userData)
 
-  const token = jwt.sign({ id: user._id }, process.env.SECRET, {
-    expiresIn: '1d',
-  })
+	await Wallet.create({ user: user._id })
 
-  const { password: localPassword, ...data } = user._doc
+	const token = jwt.sign({ id: user._id }, process.env.SECRET, {
+		expiresIn: '1d',
+	})
 
-  const newUser = {
-    ...data,
-    token,
-  }
+	const { password: localPassword, ...data } = user._doc
 
-  res.status(201).json(newUser)
+	const newUser = {
+		...data,
+		token,
+	}
+
+	await User.populate(newUser, { path: 'user_role_id' })
+
+	res.status(201).json(newUser)
 })
 
 const login = asyncHandler(async (req, res) => {
-  const { email, password, remember } = req.body
+	const { email, password, remember } = req.body
 
-  if (!email || !password) {
-    res.status(400)
-    throw new Error('Please provide all data')
-  }
+	if (!email || !password) {
+		res.status(400)
+		throw new Error('Please provide all data')
+	}
 
-  const user = await User.findOne({ email })
+	const user = await User.findOne({ email })
 
-  if (!user) {
-    res.status(400)
-    throw new Error('User not found')
-  }
+	if (!user) {
+		res.status(400)
+		throw new Error('User not found')
+	}
 
-  const passwordMatch = await bcrypt.compare(password, user.password)
+	const passwordMatch = await bcrypt.compare(password, user.password)
 
-  if (!passwordMatch) {
-    res.status(400)
-    throw new Error('Password do not match')
-  }
+	if (!passwordMatch) {
+		res.status(400)
+		throw new Error('Password do not match')
+	}
 
-  const tokenOptions = !!remember ? {} : { expiresIn: '1d' }
+	const tokenOptions = !!remember ? {} : { expiresIn: '1d' }
 
-  const token = jwt.sign({ id: user._id }, process.env.SECRET, tokenOptions)
+	const token = jwt.sign({ id: user._id }, process.env.SECRET, tokenOptions)
 
-  const { password: localPassword, ...data } = user._doc
+	const { password: localPassword, ...data } = user._doc
 
-  const newUser = {
-    ...data,
-    token,
-  }
+	const newUser = {
+		...data,
+		token,
+	}
 
-  res.status(201).json(newUser)
+	await User.populate(newUser, { path: 'user_role_id' })
+
+	res.status(201).json(newUser)
 })
 
 module.exports = {
-  register,
-  login,
+	register,
+	login,
 }

@@ -13,6 +13,7 @@ const walletRouter = require('./routes/walletRoute')
 const bookmarksRouter = require('./routes/bookmarksRoute')
 const transactionsRouter = require('./routes/transactionsRoute')
 const gamePointsRouter = require('./routes/gamePointsRoute')
+const rolesRouter = require('./routes/rolesRoute')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -30,6 +31,7 @@ app.use('/api/wallet/', walletRouter)
 app.use('/api/bookmarks/', bookmarksRouter)
 app.use('/api/transactions/', transactionsRouter)
 app.use('/api/gamePoints/', gamePointsRouter)
+app.use('/api/roles/', rolesRouter)
 
 app.use(errorHandler)
 
